@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+    <mapper namespace="com.education.edu.dao.ChapterMapper">
+<insert id="InsertChapterByCid" parameterType="chapter">
+    INSERT INTO chapter
+(
+chapter.course_cha_id,
+chapter.video,
+chapter.cha_date,
+chapter.cha_name,
+chapter.`data`
+)
+VALUES
+(
+#{course_cha_id},
+#{video},
+#{cha_date},
+#{cha_name},
+#{data}
+)
+
+</insert>
+<select id="SelectChapterAllById" resultType="chapter" parameterType="Integer">
+    select * from chapter where course_cha_id=#{course_cha_id}
+</select>
+    <select id="SelectChapterById" resultType="chapter" parameterType="Integer">
+    select * from chapter where cha_id=#{cha_id}
+</select>
+<!--    删除章节-->
+    <delete id="DeleteChapterByChap_id" parameterType="Integer">
+        DELETE FROM chapter
+WHERE cha_id=#{cha_id};
+
+    </delete>
+    <!--    删除章节-->
+    <delete id="DeleteChapterByCourse_cha_id" parameterType="Integer">
+        DELETE FROM chapter
+WHERE course_cha_id=#{course_cha_id};
+    </delete>
+<!--    更新章节信息-->
+    <update id="UpdataChapterByCha_id" parameterType="chapter">
+        update chapter <set>
+        <if test="data !=null and data!=''">
+            data=#{data},
+        </if>
+        <if test="video !=null and video!=''">
+            video=#{video},
+        </if>
+        <if test="cha_name !=null and cha_name!=''">
+            cha_name=#{cha_name},
+        </if>
+    </set>
+        <where>
+            cha_id=#{cha_id}
+        </where>
+    </update>
+    <select id="SelectChapterAndMy_Plan" resultType="Chapter" parameterType="Integer">
+        SELECT * FROM chapter LEFT JOIN my_plan
+ON chapter.cha_id=my_plan.p_cha_id
+WHERE my_plan.u_id=#{u_id}
+and course_cha_id=#{course_cha_id};
+    </select>
+    <select id="SelCountMychapterByCourId" parameterType="Integer" resultType="Integer">
+        select count(*) from chapter
+        where course_cha_id=#{course_cha_id}
+    </select>
+</mapper>
+

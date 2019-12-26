@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+    <mapper namespace="com.education.edu.dao.MycourseMapper">
+<!--生成课程表-->
+    <insert id="InsertMyCourse" parameterType="mycourse">
+        INSERT INTO mycourse
+(
+mycourse.c_chapter_id,
+mycourse.m_name,
+mycourse.m_plan,
+mycourse.m_price,
+mycourse.m_date,
+mycourse.m_img,
+mycourse.m_author,
+mycourse.u_id
+)
+VALUES
+(
+#{c_chapter_id},
+#{m_name},
+#{m_plan},
+#{m_price},
+#{m_date},
+#{m_img},
+#{m_author},
+#{u_id}
+)
+    </insert>
+    <select id="SelectMyCourseByUid" parameterType="Integer" resultType="mycourse">
+        select * from mycourse
+        where u_id=#{u_id}
+    </select>
+<!--    一对多查询-->
+    <select id="SelectOneCourseToMoreMYcourse" resultMap="SelectMycourse" parameterType="Integer">
+SELECT * FROM mycourse left JOIN chapter
+on mycourse.c_chapter_id=chapter.course_cha_id
+WHERE u_id=#{u_id};
+    </select>
+
+    <resultMap id="SelectMycourse" type="Mycourse">
+        <!--            通过此ID为主键查询-->
+         <id property="m_id" column="m_id"/>
+        <result property="u_id" column="u_id"/>
+        <result property="c_chapter_id" column="c_chapter_id"/>
+        <result property="m_name" column="m_name"/>
+        <result property="m_plan" column="m_plan"/>
+        <result property="m_price" column="m_price"/>
+        <result property="m_date" column="m_date"/>
+        <result property="m_img" column="m_img"/>
+        <result property="m_author" column="m_author"/>
+        <collection property="chapterList" javaType="List" ofType="chapter">
+<!--            通过此ID关联-->
+            <id property="cha_id" column="cha_id"/>
+            <result property="course_cha_id" column="course_cha_id"/>
+            <result property="video" column="video"/>
+            <result property="cha_sum" column="cha_sum"/>
+            <result property="cha_date" column="cha_date"/>
+            <result property="data" column="data"/>
+            <result property="cha_name" column="cha_name"/>
+        </collection>
+    </resultMap>
+<select id="SelectMycourseAndMyplanByUid" parameterType="Integer" resultType="Mycourse">
+SELECT * FROM mycourse LEFT JOIN my_plan
+ON mycourse.m_id=my_plan.m_id
+WHERE c_chapter_id=#{c_chapter_id}
+
+</select>
+    <delete id="DeleteMycourseByC_Cha_idandUid" parameterType="Integer">
+       DELETE FROM mycourse
+WHERE mycourse.c_chapter_id=#{c_chapter_id}
+and u_id=#{u_id}
+    </delete>
+    <update id="UpdateMycourseByC_course_idAndUid" parameterType="mycourse">
+        UPDATE mycourse
+        <set>
+            <if test="m_plan!=null">
+                m_plan=#{m_plan}
+            </if>
+        </set>
+        where c_chapter_id=#{c_chapter_id}
+        and u_id=#{u_id}
+    </update>
+<select id="SelMycourseByUidCourseId" resultType="mycourse" parameterType="Integer">
+    select * from mycourse
+    where u_id=#{u_id}
+    and  c_chapter_id=#{c_chapter_id}
+</select>
+</mapper>
+

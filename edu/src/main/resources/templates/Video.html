@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script type="text/javascript" th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap.min.js}"></script>
+</head>
+<body>
+<input type="hidden" id="msg" th:value="${msg1state}">
+<!--头-->
+<div id="table">
+    <h1 style="text-align: center;">学习中心</h1>
+    <ul class="nav nav-tabs">
+        <li v-if="msg=='学习中心'" role="presentation" class="active"><a v-on:click="state('学习中心')">学习中心</a></li>
+        <li v-else role="presentation"><a v-on:click="state('学习中心')">学习中心</a></li>
+        <li v-if="msg=='我的课程'" role="presentation" class="active"><a v-on:click="state('我的课程')">我的课程</a></li>
+        <li v-else role="presentation"><a v-on:click="state('我的课程')">我的课程</a></li>
+        <li role="presentation"><a href="#">个人信息</a></li>
+        <li role="presentation"><a href="/index">首页</a></li>
+    </ul>
+    <div class="container-fluid">
+        <input id="c_chapter_id" type="hidden" th:value="${c_chapter_id}">
+        <div class="row">
+            <ol class="breadcrumb" v-if="msg=='学习中心'">
+                <li><a href="#"><a v-on:click="state('学习中心')">学习中心</a></a></li>
+                <li><a href="#">{{course.course_name}}</a></li>
+                <li class="active" style="color: #26c6da">{{videolist.cha_name}}</li>
+            </ol>
+            <ol class="breadcrumb" v-else>
+                <li><a href="#"><a v-on:click="state('学习中心')">我的课程</a></a></li>
+                <li class="active" style="color: #26c6da">课程列表 </li>
+            </ol>
+            <div class="col-sm-7">
+                <!--课程列表-->
+                <div id="listmy">
+                    <div class="list-group container-fluid" v-for="mc in mycourseAndChapter">
+                        <!--                    <a href="#" class="list-group-item active">-->
+                        <div class="row">
+                            <img class="col-sm-3" :src="'images/'+mc.m_img" width="50px" height="70px"/>
+                            <a v-on:click="selectCourse(mc.c_chapter_id)" class="list-group-item col-sm-8">{{mc.c_chapter_id}}
+                                <h4 class="list-group-item-heading">{{mc.m_name}}</h4>
+                                <p class="list-group-item-text">{{mc.m_plan}}%</p>
+                            </a>
+                            <a v-on:click="DelMyCourse(mc.c_chapter_id)" class="btn btn-danger"
+                               style="height: 100%;margin-top: 20px;">删除</a>
+                        </div>
+                    </div>
+                </div>
+                <input id="videoid" type="hidden" :value="videolist.cha_id">
+                <input id="videocourse_cha_id" type="hidden" :value="videolist.course_cha_id">
+                <!--                视频播放-->
+                <div v-if="videolist.video!=null">
+                    <video oncanplay="myFunction()" id="video" :src="'video/'+videolist.video"
+                           controls="controls" width="800px" height="480px"></video>
+
+                </div>
+                <div v-if="courselist==''"><h3 style="color: lawngreen">暂无视频资源</h3></div>
+            </div>
+            <br>
+            <br>
+
+            <div class="col-sm-5" id="kc">
+                <div class="panel-heading">课程选集(章节学习进度必须大于90%)</div>
+                <div class="list-group" v-for="(c,index) in courselist">
+                    <!--                <a href="#" class="list-group-item disabled">-->
+                    <!--&lt;!&ndash; glyphicon glyphicon-ok  勾  glyphicon glyphicon-play-circle播放 glyphicon glyphicon-pause暂停&ndash;&gt;-->
+                    <!--                </a>-->
+
+                    <a v-if="c.cha_id==videolist.cha_id" v-on:click="active(c.cha_id)"
+                       class="active list-group-item"><span class=" glyphicon glyphicon-pause"
+                                                            style="color: #009efb"></span>{{index+1}}、{{c.cha_name}}<span>-</span>{{c.data}}<span
+                            class="lyphicon glyphicon-ok "></span><em> &nbsp;&nbsp;&nbsp;&nbsp;<span
+                            class="glyphicon glyphicon-time" style="color: #009efb"></span> </em>{{c.p_plan}}%<span
+                            v-if="c.p_plan>=90"
+                            class="glyphicon glyphicon-ok" style="color: #00f50c"></span></a>
+                    <a v-else v-on:click="active(c.cha_id)" class="list-group-item"><span
+                            class=" glyphicon glyphicon-play-circle" style="color: #009efb"></span>{{index+1}}、{{c.cha_name}}<span>-</span>{{c.data}}<em>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-time" style="color: #009efb"></span>
+                    </em>{{c.p_plan}}%<span v-if="c.p_plan>=90" class="glyphicon glyphicon-ok"
+                                            style="color: #00f50c"></span></a>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{vuejs/axios-0.18.0.js}"></script>
+<script th:src="@{vuejs/vuejs-2.5.16.js}"></script>
+<script th:src="@{vuejs/video.js}"></script>
+
+<script>
+    //获取视频DOM元素
+
+
+    myVideo.oncanplay = function () {
+        console.log("准备就绪");
+
+    };
+
+    function myFunction() {
+        var myVideo = document.getElementById("video");
+        if (myVideo != null) {
+            var perscents = getPlan();
+            go(myVideo,perscents);
+        }
+    }
+
+    //监听播放开始
+    function go(myVideo,perscents) {
+        myVideo.addEventListener('play', function () {
+            var plans=Math.floor(perscents*0.01*myVideo.duration)
+            myVideo.currentTime=plans;
+            console.log("开始播放，播放进度：" + myVideo.currentTime + "s   总进度：" + myVideo.duration);
+        });
+
+        //监听播放结束
+        myVideo.addEventListener('pause', function () {
+            if ((myVideo.duration-myVideo.currentTime)<=3){
+                Ajax(100);
+            }
+            console.log("播放暂停，播放进度：" + myVideo.currentTime + "s    总进度：" + myVideo.duration);
+
+        });
+
+        //监听播放结束
+        myVideo.addEventListener('ended', function (percen) {
+            Ajax(percen);
+            console.log("播放结束");
+        });
+
+        //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
+        myVideo.addEventListener("timeupdate", function () {
+            var timeDisplay;
+            var sumtime;
+            var percent;
+            //用秒数来显示当前播放进度
+            timeDisplay = Math.floor(myVideo.currentTime);
+            // console.log(Math.floor(myVideo.currentTime))
+//            parseInt(5.0)=5
+            sumtime = Math.floor(myVideo.duration);
+            percent = timeDisplay / sumtime;
+            percent = parseInt(percent * 100);
+            if (percent % 1 == 0) {
+                Ajax(percent);
+            }
+
+            console.log(percent + "%");
+            //当视频播放到 4s的时候做处理
+
+        }, false);
+
+    }
+
+    //保存进度
+    function Ajax(percent) {
+        var id = $("#videoid").val();
+        var course_cha_id=$("#videocourse_cha_id").val();
+        $.ajax({
+            url: "/plan",
+            type: 'post',
+            data: {cha_id: id, percent: percent,course_cha_id:course_cha_id},
+            success: function (data) {
+                if (data == '成功') {
+                    window.findAll();
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+
+    //    获取当前进度
+    function getPlan() {
+        var id = $("#videoid").val();
+        var persons;
+        $.ajax({
+            url: "/getPlan",
+            type: 'post',
+            data: {cha_id: id},
+            async: false,
+            success: function (data) {
+                return persons = data;
+            },
+            error: function () {
+                alert("error")
+            }
+        });
+        return persons;
+    }
+
+</script>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="head" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>页头</title>
+    <link rel="stylesheet" href="/static/plugins/normalize-css/normalize.css" />
+    <link rel="stylesheet" href="/static/plugins/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/static/css/page-learing-article.css" />
+    <link rel="stylesheet" href="/css/page-learing-index.css" />
+    <link rel="stylesheet" href="/css/page-header.css" />
+    <link rel="stylesheet" href="/css/el/index.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="/css/el/index.js"></script>
+    <script src="/js/vue/vue.min.js"></script>
+    <script src="/js/jwt-decode/jwt-decode.min.js"></script>
+    <script src="/js/base64.min.js"></script>
+    <script src="/js/axios/axios.min.js"></script>
+    <script src="/js/querystring/index.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/public.js"></script>
+    <script src="/js/login.js"></script>
+
+
+</head>
+<body >
+<div id="app">
+<!--头部导航-->
+<header >
+    <div class="learingHeader">
+        <nav class="navbar">
+            <div class="">
+                <div class="logo"><img src="/img/asset-logoIco.png" width="100%" alt=""></div>
+                <div class="nav-list">
+                    <ul class="nav navbar-nav">
+                        <li ><a href="/">首页</a></li>
+                        <li><a href="/course/search">课程</a></li>
+                        <li><a href="#">职业规划</a></li>
+                        <li></li>
+                    </ul>
+                </div>
+
+                <div class="sign-in">
+                    <!-- 未登录 -->
+                    <!-- <a href="#">登录 </a> <span> | </span> <a href="#"> 注册</a>-->
+                    <!-- 登录 -->
+                    <!--<a href="#" class="personal"><span class="personalIco"></span>消息</a>-->
+
+                    <a href="/videos" class="personal" target="_blank">我的学习</a>
+                    <a href="javascript:;" @click="showlogin" v-if="logined == false" th:text="${session.username}">登陆&nbsp;|&nbsp;注册</a>
+                    <a href="/manage" class="personal" target="_blank">系统后台</a>
+                    <th:bloclk th:if="${session.user!=null}">
+
+                        <a  href="/exit" class="personal">退出登陆</a>
+                        <a  href="/exit" class="personal" th:text="'用户名：'+${session.user.username}"></a>
+                    </th:bloclk>
+
+                    <!--<a href="#" class="myInfo"><img src="img/asset-myImg.jpg" alt="">个人中心</a>-->
+                </div>
+                <!--<div class="starch">
+                    <div><input type="text" class="input-search" placeholder="输入查询关键词"></div>
+                    <div class="searchword"><a href="">搜索</a> </div>
+                </div>-->
+                <div class="starch">
+                    <div><input type="text" id="search1" class="input-search"   placeholder="输入查询关键词"></div>
+                    <div class="searchword"><a v-on:click="search1()">搜索</a> </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+</header>
+</div>
+<script type="text/x-template" id="login">
+<div>login....</div>
+</script>
+<script>
+</script>
+</body>
+<script  th:src="@{vuejs/axios-0.18.0.js}"></script>
+<script  th:src="@{vuejs/vuejs-2.5.16.js}"></script>
+<script  th:src="@{vuejs/vue_course.js}"></script>
+</html>

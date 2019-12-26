@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+    <mapper namespace="com.education.edu.dao.MyplanMapper">
+<insert id="InsertMyPlan" parameterType="my_plan">
+    INSERT INTO my_plan
+(
+my_plan.p_cha_id,
+my_plan.p_plan,
+my_plan.p_course_id,
+my_plan.u_id
+)
+VALUES
+(
+#{p_cha_id},
+#{p_plan},
+#{p_course_id},
+#{u_id}
+)
+</insert>
+<update id="UpdateMy_planByCha_id" parameterType="my_plan">
+    UPDATE my_plan
+<set>
+    p_plan=#{p_plan}
+</set>
+WHERE p_cha_id=#{p_cha_id}
+and u_id=#{u_id}
+</update>
+    <select id="SelectMyPlanByCha_id" parameterType="Integer" resultType="my_plan">
+        select * from
+        my_plan
+        where p_cha_id=#{p_cha_id}
+        and u_id=#{u_id}
+    </select>
+    <delete id="DelMy_plan" parameterType="Integer">
+        DELETE  FROM my_plan
+WHERE  p_course_id=#{p_course_id}
+and u_id=#{u_id}
+    </delete>
+
+</mapper>
+
