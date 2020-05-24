@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Material Design Bootstrap</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="../static/manage/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="../static/manage/css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="../static/manage/css/style.min.css" rel="stylesheet">
+
+    <style>
+
+        .map-container {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+        }
+
+        .map-container iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body class="grey lighten-3">
+
+<!--页头-->
+<header id="herdA">
+
+    <!-- Navbar -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+        <div class="container-fluid">
+
+            <!-- Brand -->
+            <a class="navbar-brand waves-effect" href="#" target="_blank">
+                <strong class="blue-text">视频管理</strong>
+            </a>
+
+            <!-- Collapse -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <!-- Left -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link waves-effect" href="#">主页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link waves-effect" href="/" >返回网站首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link waves-effect" href="#"
+                           target="_blank">私信</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link waves-effect" href="#" target="_blank">
+                            消息</a>
+                    </li>
+                </ul>
+
+                <!-- Right -->
+                <ul class="navbar-nav nav-flex-icons">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link waves-effect" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link waves-effect" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link border border-light rounded waves-effect"
+                           target="_blank">
+                            <i class="fab fa-github mr-2"></i>{{user.user_name}}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link border border-light rounded waves-effect"
+                           target="_blank">
+                            </i>退出登录
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+    <!-- Navbar -->
+
+    <!-- 左侧导航栏 -->
+    <div class="sidebar-fixed position-fixed">
+
+        <a class="logo-wrapper waves-effect">
+            <img v-if="personal.images!=null"  :src="'../static/images/My/'+personal.images" class="img-fluid" alt="...">
+      <img v-else  src="../static/images/My/默认头像.jpg" class="img-fluid" alt="...">
+        </a>
+
+        <div class="list-group list-group-flush">
+            <a href="/manage/index" class="list-group-item  waves-effect">
+                <i class="fas fa-chart-pie mr-3"></i>主页
+            </a>
+            <a href="/manage/personal" class=" list-group-item list-group-item-action waves-effect">
+                <i class="fas fa-user mr-3"></i>个人信息</a>
+            <a href="/manage/table" class="list-group-item active list-group-item-action waves-effect">
+                <i class="fas fa-table mr-3 "></i>我的投稿</a>
+            <a  id="admin4" href="/manage/assessor" class="list-group-item  list-group-item-action waves-effect">
+                <i class="fas fa-table mr-3 "></i>投稿管理</a>
+            <a id="admin" href="/manage/order" class=" list-group-item list-group-item-action waves-effect">
+                <i class="fas fa-map mr-3"></i>订单（admin）</a>
+            <a id="admin3" href="/manage/user" class=" list-group-item list-group-item-action waves-effect">
+                <i class="fas fa-map mr-3"></i>用户（admin）</a>
+            <a id="admin2" href="/manage/rate" class="list-group-item list-group-item-action waves-effect">
+                <i class="fas fa-money-bill-alt mr-3"></i>网站流量（admin）</a>
+        </div>
+
+    </div>
+    <!-- 左侧导航栏 -->
+
+</header>
+<!--页头-->
+
+<!--主区域-->
+<main class="pt-5 mx-lg-5" id="tables">
+    <div class="container-fluid mt-5">
+
+        <!-- 导航条 -->
+        <div class="card mb-4 wow fadeIn">
+            <!--Card content-->
+            <div class="card-body d-sm-flex justify-content-between">
+                <!--路径栏-->
+                <h4 class="mb-2 mb-sm-0 pt-1">
+                    <a href="#" target="_blank">主页</a>
+                    <span>/</span>
+                    <span>我的视频/</span>
+                    <span>{{courseList.course_name}}</span>
+                </h4>
+                <!--         搜索框-->
+                <form class="d-flex justify-content-center">
+                    <!-- Default input -->
+                    <input type="search" placeholder="##" aria-label="Search" class="form-control">
+                    <button class="btn btn-primary btn-sm my-0 p" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+        <!-- Heading -->
+        <!--表格块1-->
+        <div class="row wow fadeIn">
+            <!--Grid column-->
+            <div class="col-sm-12">
+                <!--Card-->
+                <div class="card">
+                    <!--Card content-->
+                    <div class="card-body">
+                        <!-- Table  -->
+                        <!-- 视频  -->
+                        <div class="row">
+
+                            <video :src="'../video/'+chapter.video" class="col-sm-7" style="height: 450px; width: 700px" controls
+                                   :poster="'../static/images/chapter/'+chapter.images">
+                                <source :src="'../static/video/'+chapter.video" type="video/mp4">
+                                <source src="movie.ogg" type="video/ogg">
+                                您的浏览器不能使用最新的视频播放方式呢
+                            </video>
+
+                            <div class="col-sm-5">
+                                <!-- 表格块 -->
+                                <table class="table table-hover">
+                                    <!-- Table head -->
+                                    <thead class="blue-grey lighten-4">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>节</th>
+                                        <th>修改</th>
+                                        <th>删除</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <template v-for="c,index in chapterlist">
+                                    <tr v-if="c.cha_id==chapter.cha_id" bgcolor="#7fffd4">
+<!--                                         ‖-->
+                                        <th scope="row" v-on:click="getVideo(c.cha_id)"> 📺p{{index+Number(1)}}</th>
+                                        <td v-on:click="getVideo(c.cha_id)">{{c.cha_name}}</td>
+                                        <td >
+                                            <a  href="###" role="button" data-toggle="modal" :data-target="'#del'+c.cha_id">
+                                            <span style="color: #0b51c5">修改</span>
+                                        </a>
+                                        </td>
+                                        <td><a style="color: red" href="###" v-on:click="del(c.cha_id)">删除</a></td>
+                                    </tr>
+                                        <tr v-else>
+                                            <!--                                         -->
+                                            <th scope="row" v-on:click="getVideo(c.cha_id)"> ▶p{{index+Number(1)}}</th>
+                                            <td v-on:click="getVideo(c.cha_id)">{{c.cha_name}}</td>
+                                            <td >
+                                                <a  href="###" role="button" data-toggle="modal" :data-target="'#del'+c.cha_id">
+                                                    <span style="color: #0b51c5">修改</span>
+                                                </a>
+                                            </td>
+                                            <td><a style="color: red" href="###" v-on:click="del(c.cha_id)">删除</a></td>
+                                        </tr>
+                                    </template>
+
+                                    <tr>
+                                        <th style="text-align: center" colspan="4">
+                                            <a class="btn btn-default" href="#" role="button" data-toggle="modal" data-target="#myModal">
+                                            <span style="color: #0b51c5">添加</span>
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    </tbody>
+                                    <!-- Table body -->
+                                </table>
+
+                            </div>
+                        </div>
+                        <p>详情↓</p>
+                    </div>
+                </div>
+                <!--/.Card-->
+            </div>
+            <!--Grid column-->
+        </div>
+    </div>
+<!--修改视频信息-->
+    <br>
+    <br>
+    <form action="/manage/UdpCourse" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="course_id" :value="courseList.course_id">
+        <input type="hidden" name="img" :value="courseList.img">
+        <div class="form-group">
+            <label for="exampleInputEmail1">课程名称</label>
+            <input type="text" name="course_name" class="form-control" id="exampleInputEmail1A"
+                   :placeholder="courseList.course_name">
+        </div>
+        <!--                    class_id -->
+        <div class="form-group">
+            <label for="exampleInputPassword1">课程种类</label>
+            <select id="exampleInputPassword1" name="class_id">
+                    <template v-for="cc in class_All">
+                            <option v-if="courseList.class_id==cc.dict_id" selected :value="cc.dict_id">{{cc.course_class}}</option>
+                            <option v-else :value="cc.dict_id">{{cc.course_class}}</option>
+                 </template>
+            </select>
+        </div>
+        <div class="form-group">
+        <label for="exampleInputPassword2">课程等级</label>
+
+        <select id="exampleInputPassword2" name="grade">
+            <option value="初级" v-if="courseList.grade=='初级'" selected>初级</option>
+            <option value="初级" v-else>初级</option>
+            <option value="中级" v-if="courseList.grade=='中级'" selected>中级</option>
+            <option value="中级" v-else>中级</option>
+            <option value="高级" v-if="courseList.grade=='高级'" selected>高级</option>
+            <option value="高级" v-else>高级</option>
+        </select>
+    </div>
+        <div class="form-group">
+            <label for="exampleInputEmail3">总课时(H)</label>
+            <input type="text" name="class_hour" class="form-control" id="exampleInputEmail3"
+                   :placeholder="courseList.class_hour">
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail44">介绍</label>
+            <input type="text" name="introduction" class="form-control" id="exampleInputEmail44"
+                   :placeholder="courseList.introduction">
+        </div>
+        <div class="form-group">
+            <img :src="'../static/images/course/'+courseList.img" width="150px" height="100px">
+            <label for="exampleInputFile">上传课程封面</label>
+            <input type="file" name="file" id="exampleInputFileA">
+        </div>
+        <!--                    <button type="submit" class="btn btn-success">下一步</button>-->
+        <button type="submit" class="btn btn-success">保存</button>
+
+    </form>
+
+
+
+    <!-- 添加模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myModalLabel">添加章节</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/manage/addChapter" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">章节名称</label>
+                            <input type="text" name="cha_name" class="form-control" id="exampleInputEmail1"
+                                   placeholder="课程名称">
+                        </div>
+                        <input type="hidden" name="course_id" :value="courseList.course_id">
+                        <div class="form-group">
+                            <label for="exampleInputFile2">上传视频预览图</label>
+                            <input type="file" name="file2" id="exampleInputFile2">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">上传视频</label>
+                            <input type="file" name="file" id="exampleInputFile">
+                        </div>
+                        <button type="submit" class="btn btn-default">添加章节</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--                             修改模态框   -->
+    <template v-for="cc in chapterlist">
+        <!-- 修改模态框 -->
+        <div class="modal fade" :id="'del'+cc.cha_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">修改章节</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/manage/udpChapter" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="cha_id" :value="cc.cha_id">
+                            <input type="hidden" name="video" :value="cc.video">
+                            <input type="hidden" name="course_id" :value="cc.course_id">
+                            <div class="form-group">
+                                <label for="del1index2">章节名称</label>
+                                <input type="text" name="cha_name" class="form-control" id="del1index2"
+                                       :placeholder="cc.cha_name">
+                            </div>
+                            <input type="hidden" name="course_id" :value="course_id">
+                            <div class="form-group">
+                                原图：
+                                <img width="200px" height="120px" :src="'../static/images/chapter/'+cc.images">
+                                <label for="exampleInputFile33">上传预览图</label>
+                                <input type="file" name="file2" id="exampleInputFile33">
+                            </div>
+                            <hr style="height: 3px;background-color: #00b0ff">
+                            <div class="form-group">
+                                <label for="exampleInputFile3">上传视频</label>
+                                <input type="file" name="file" id="exampleInputFile3">
+                            </div>
+                            <button type="submit" class="btn btn-default">保存修改</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--                             添加模态框   -->
+    </template>
+</main>
+<!--主区域-->
+
+<!--页脚-->
+<footer class="page-footer text-center font-small primary-color-dark darken-2 mt-4 wow fadeIn">
+
+    <!--Call to action-->
+    <div class="pt-4">
+        <a class="btn btn-outline-white" href="#" target="_blank"
+           role="button">打印
+            <i class="fas fa-download ml-2"></i>
+        </a>
+        <a class="btn btn-outline-white" href="#" target="_blank" role="button">留言
+            <i class="fas fa-graduation-cap ml-2"></i>
+        </a>
+    </div>
+    <!--/.Call to action-->
+
+    <hr class="my-4">
+
+    <!-- Social icons -->
+
+    <!-- Social icons -->
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3"> © 2019
+    </div>
+    <!--/.Copyright-->
+
+</footer>
+<!--/.页脚-->
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="../static/manage/js/jquery-3.4.1.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="../static/manage/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="../static/manage/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="../static/manage/js/mdb.min.js"></script>
+
+<!--引入Vue-->
+<script src="../static/vuejs/axios-0.18.0.js"></script>
+<script src="../static/vuejs/vuejs-2.5.16.js"></script>
+<script src="../static/vuejs/manage/table_chapter.js"></script>
+<script src="../static/vuejs/main/herder.js"></script>
+<!-- Initializations -->
+<script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+</script>
+
+
+</body>
+
+</html>

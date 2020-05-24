@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="../static/manage/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="../static/manage/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="../static/manage/css/style.min.css" rel="stylesheet">
+  <style>
+
+    .map-container{
+overflow:hidden;
+padding-bottom:56.25%;
+position:relative;
+height:0;
+}
+.map-container iframe{
+left:0;
+top:0;
+height:100%;
+width:100%;
+position:absolute;
+}
+  </style>
+</head>
+
+<body class="grey lighten-3">
+
+<!--页头-->
+<header id="herdA">
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container-fluid">
+
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="#" target="_blank">
+        <strong class="blue-text">视频管理</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link waves-effect" href="#">主页
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="/">返回网站首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="#"
+               target="_blank">私信</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="#" target="_blank">
+              消息</a>
+          </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link border border-light rounded waves-effect"
+               target="_blank">
+              <i class="fab fa-github mr-2"></i>{{user.user_name}}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/logout" class="nav-link border border-light rounded waves-effect"
+               target="_blank">
+              </i>退出登录
+            </a>
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <!-- 左侧导航栏 -->
+  <div class="sidebar-fixed position-fixed">
+
+    <a class="logo-wrapper waves-effect">
+      <img v-if="personal.images!=null"  :src="'../static/images/My/'+personal.images" class="img-fluid" alt="...">
+      <img v-else  src="../static/images/My/默认头像.jpg" class="img-fluid" alt="...">
+    </a>
+
+    <div class="list-group list-group-flush">
+      <a href="/manage/index" class="list-group-item  waves-effect">
+        <i class="fas fa-chart-pie mr-3"></i>主页
+      </a>
+      <a href="/manage/personal" class=" list-group-item list-group-item-action waves-effect">
+        <i class="fas fa-user mr-3"></i>个人信息</a>
+      <a href="/manage/table" class="list-group-item  list-group-item-action waves-effect">
+        <i class="fas fa-table mr-3 "></i>我的投稿</a>
+      <a  id="admin4" href="/manage/assessor" class="list-group-item  list-group-item-action waves-effect">
+        <i class="fas fa-table mr-3 "></i>投稿管理</a>
+      <a id="admin" href="/manage/order" class="active list-group-item list-group-item-action waves-effect">
+        <i class="fas fa-map mr-3"></i>订单（admin）</a>
+      <a id="admin3" href="/manage/user" class=" list-group-item list-group-item-action waves-effect">
+        <i class="fas fa-map mr-3"></i>用户（admin）</a>
+      <a id="admin2" href="/manage/rate" class="list-group-item list-group-item-action waves-effect">
+        <i class="fas fa-money-bill-alt mr-3"></i>网站流量（admin）</a>
+    </div>
+
+  </div>
+  <!-- 左侧导航栏 -->
+
+</header>
+<!--页头-->
+
+  <!--主区域-->
+  <main class="pt-5 mx-lg-5" id="tables">
+
+    <div class="container-fluid mt-5">
+
+      <!-- 导航条 -->
+      <div class="card mb-4 wow fadeIn">
+        <!--Card content-->
+        <div class="card-body d-sm-flex justify-content-between">
+<!--路径栏-->
+          <h4 class="mb-2 mb-sm-0 pt-1">
+            <a href="/" target="_blank">主页</a>
+            <span>/</span>
+            <span>订单</span>
+          </h4>
+<!--         搜索框-->
+          <form class="d-flex justify-content-center">
+            <!-- Default input -->
+            <input type="search" placeholder="##" aria-label="Search" class="form-control">
+            <button class="btn btn-primary btn-sm my-0 p" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- Heading -->
+
+      <!--图表块-->
+      <div class="row wow fadeIn">
+<!--        个人信息表   -->
+        <table class="table table-striped">
+          <tr>
+            <td>#</td>
+            <td>订单号</td>
+            <td>用户ID</td>
+            <td>用户名</td>
+            <td>生成日期</td>
+            <td>金额</td>
+            <td>项目</td>
+            <td>状态</td>
+            <td>管理</td>
+          </tr>
+          <tr v-for="o,index in orderlist">
+            <td style="color: #00b0ff">{{index+Number(1)}}</td>
+            <td>{{o.order_id}}</td>
+            <td>{{o.u_id}}</td>
+            <td style="color: blue">{{o.user_name}}</td>
+            <td>{{o.date}}</td>
+            <td style="color: red">{{o.price}}</td>
+            <td style="color: #ff5b22">超级VIP{{o.longtime}}天</td>
+            <td  style="color: #00c851">正常</td>
+
+            <!--           <td style="color: #00c851">余{{dateNow}}</td>-->
+            <td><a role="button" class="button btn-info">管理</a></td>
+          </tr>
+        </table>
+
+      </div>
+      <!--图表块-->
+    </div>
+  </main>
+  <!--主区域-->
+
+<!--页脚-->
+<footer class="page-footer text-center font-small primary-color-dark darken-2 mt-4 wow fadeIn">
+
+  <!--Call to action-->
+  <div class="pt-4">
+    <a class="btn btn-outline-white" href="#" target="_blank"
+       role="button">打印
+      <i class="fas fa-download ml-2"></i>
+    </a>
+    <a class="btn btn-outline-white" href="#" target="_blank" role="button">留言
+      <i class="fas fa-graduation-cap ml-2"></i>
+    </a>
+  </div>
+  <!--/.Call to action-->
+
+  <hr class="my-4">
+
+  <!-- Social icons -->
+
+  <!-- Social icons -->
+
+  <!--Copyright-->
+  <div class="footer-copyright py-3"> © 2019
+  </div>
+  <!--/.Copyright-->
+
+</footer>
+<!--/.页脚-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="../static/manage/js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="../static/manage/js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="../static/manage/js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="../static/manage/js/mdb.min.js"></script>
+  <!--引入Vue-->
+  <script src="../static/vuejs/axios-0.18.0.js"></script>
+  <script src="../static/vuejs/vuejs-2.5.16.js"></script>
+  <script src="../static/vuejs/manage/order.js"></script>
+  <!-- / JavaScript Files --><!--引入Vue-->
+  <script src="../static/vuejs/main/herder.js"></script>
+  <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+
+  </script>
+
+
+  
+</body>
+
+</html>

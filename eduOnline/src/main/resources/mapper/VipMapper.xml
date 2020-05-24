@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.VipMapper">
+    <insert id="InsVip" parameterType="vip">
+    INSERT INTO `edu`.`vip`
+(
+`startdate`,
+ `longtime`,
+`u_id`,
+`year`,
+`grade`
+)
+VALUES
+ (
+  #{startdate},
+ #{longtime},
+#{u_id},
+#{year},
+ #{grade}
+);
+</insert>
+    <select id="SelVip" resultType="vip" parameterType="Integer">
+  select *from vip
+  where u_id=#{u_id}
+ </select>
+    <update id="UdpVipByU_id" parameterType="vip">
+        UPDATE
+        `edu`.`vip`
+        <set>
+            <if test="startdate!=null and startdate!=''">
+                `startdate`=#{startdate},
+            </if>
+            <if test="longtime!=null and longtime!=''">
+                `longtime`=#{longtime},
+            </if>
+            <if test="grade!=null and grade!=''">
+                `grade`=#{grade},
+            </if>
+            <if test="year!=null and year!=''">
+                `year`=#{year},
+            </if>
+        </set>
+        WHERE (`u_id`=#{u_id});
+    </update>
+
+</mapper>
+

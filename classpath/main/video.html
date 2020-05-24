@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>eLearn - Video</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../static/main/plugin/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../static/main/plugin/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../static/main/css/style.css"/>
+    <!-- / CSS Files -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- JavaScript Files -->
+    <script src="../static/js/jquery-3.2.1.min.js"></script>
+    <script src="../static/main/plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/main/plugin/jquery.cuteTime.min.js"></script>
+    <script src="../static/main/script/script.js"></script>
+    <!-- / JavaScript Files -->
+    <style>
+        .A {
+            display: inline-block;
+            vertical-align: baseline;
+            /*指定父元素*/
+            position: relative;
+        }
+
+        .A .B {
+            /*开启绝对定位*/
+            position: absolute;
+            /*height,right,bottom,top*/
+            height: 70px;
+            right: 10%;
+            bottom: 20%;
+            /*叠堆显示层  数值越大 离用户越近*/
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+<!--页头-->
+<header id="herdA" class="main" style="background-color: #333">
+    <div class="container">
+        <nav class="navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img height="40px" width="80px" id="logo" src="../static/main/img/logo.png"
+                                                      alt="eLearn"/></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <div class="navbar-right menu-main">
+
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/"><span>主页</span></a></li>
+                        <li><a href="/vip/trends"><span>动态</span></a></li>
+                        <li><a href="/vip/myLike"><span>收藏</span></a></li>
+                        <li><a href="/vip/personal"><span>个人中心</span></a></li>
+                        <li><a href="/vip/personal2">用户:<span>{{user.user_name}}</span></a></li>
+                        <li v-if="vip>0"><a href="/vip/personal2"><span style="color:#ff850c;"
+                                                                        class="glyphicon glyphicon-king">超级VIP:{{vip}}天 </span></a>
+                        </li>
+                        <li v-else><a href="/vip/vip"><span style="color:#ffd2ac;" class="glyphicon glyphicon-king">开通VIP </span></a>
+                        </li>
+                    </ul>
+                    <a class="btn btn-theme navbar-btn btn-default sign-in" href="/vip/submit1">投稿</a>
+                    <a v-if="user==''" class="btn btn-theme navbar-btn btn-default sign-in" href="/login">登录</a>
+                    <a v-if="user==''" class="btn btn-theme navbar-btn btn-orange  sign-up" href="/register">注册</a>
+                    <a v-if="user.r_id==1" class="btn btn-theme navbar-btn btn-orange  sign-up"
+                       href="/manage/index">后台</a>
+                    <a v-if="user!=''" class="btn btn-theme navbar-btn btn-orange  sign-up" href="/logout">退出登录</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!--页头-->
+    <div id="tables">
+        <!--  路径  -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                    </div>
+                    <div class="col-md-5">
+                        <ol class="breadcrumb pull-right">
+                            <li><a href="/">首页</a></li>
+                            <li><a href="categories.htm">所有</a></li>
+                            <li class="active">视频列表</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!--搜索框-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+
+                    </div><!-- /.col-lg-6 -->
+                    <div class="col-lg-5 col-md-5">
+                        <div class="input-group">
+                            <input id="texts" type="text" class="form-control" placeholder="内容...">
+                            <span class="input-group-btn">
+        <button v-on:click="search2()" class="btn btn-default" type="button"><span
+                class="glyphicon glyphicon-search"></span></button>
+      </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                </div><!-- /.row -->
+            </div>
+            <!--搜索框-->
+        </div>
+    </div>
+</header>
+<!--页头-->
+
+
+<div id="tableA">
+    <div class="container">
+        <div class="row">
+            <ul class="col-md-8 nav nav-tabs">
+                <li role="presentation">
+                    <a v-if="course.vip=='1'" href="#">VIP课程&nbsp;/&nbsp;{{course.course_name}}</a>
+                    <a v-else href="#">免费课程&nbsp;/&nbsp;{{course.course_name}}</a>
+                </li>
+            </ul>
+            <div class="col-md-4">
+                <div class="row">
+                    <img v-if="course.images!=null" height="100px" width="100px" :src="'../static/images/My/'+course.images"
+                         class="img-circle" alt="...">
+                    <img v-else height="100px" width="100px" src="../static/images/My/默认头像.jpg" class="img-circle" alt="...">
+                    {{course.user_name}}&nbsp;&nbsp;&nbsp;&nbsp;lv1
+                    <button v-on:click="toSub(course.u_id)" type="button" class="btn btn-info">关注ta</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Video: film view -->
+    <section class="content content-light  video-film">
+
+        <div class="container">
+            <!-- Video film view - center -->
+            <div class="row">
+                <div class="col-md-8">
+                    <article>
+                        <!-- Video film - player -->
+                        <div class="A">
+                            <hr style="height: 5px;background-color: white">
+                            <video oncanplay="myFunction()" id="video" :src="'../video/'+chapter.video"
+                                   class="A  video-prev video-play-here" controls
+                                   :poster="'../static/images/chapter/'+chapter.images">
+                                <source :src="'../static/video/'+chapter.video" type="video/mp4">
+                                <source src="#" type="video/ogg">
+                                您的浏览器不能使用最新的视频播放方式呢
+                                <span id="cha_id">{{chapter.cha_id}}</span>
+                            </video>
+                            <!--                        <button id="planClick" onclick="skip()" type="button" class="btn btn-danger B">点击跳转</button>-->
+                            <div id="planClick" class="alert B alert-danger" role="alert">
+                                <a href="/vip/vip" class="alert-link"><span class="glyphicon glyphicon-stop"></span>&nbsp;&nbsp;:请点击开通VIP后继续观看</a>
+                            </div>
+                            <!--                        </div>-->
+                            <!--                        <div class="A" v-else>-->
+                            <!--                            <h1 style="color: red">暂无资源...</h1>-->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                播放量: <b>{{course.view}}</b> <br/>
+                            </div>
+                            <div class="col-md-4">
+                                收藏: <b>{{course.like}}</b> <a href="###"></a>
+                            </div>
+                            <div class="col-md-4">
+                                点赞: <b>{{course.good}}</b> <a href="###"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <small>作者: {{chapter.cha_name}}</small>
+                            </div>
+                            <div class="col-md-4">
+                                <small>日期:{{chapter.cha_date}}</small>
+                            </div>
+                            <div class="col-md-4">
+                                <small>类别:{{course.course_class}}</small> <br/>
+                            </div>
+                        </div>
+                        <div class="video-content">
+                            <p>{{course.introduction}}
+                            </p>
+                        </div>
+                        <hr class="invisible"/>
+                        <hr class="invisible"/>
+
+                        <!-- 推荐列表 -->
+                        <section class="related">
+                            <h2>与他相关的视频推荐</h2>
+                            <div class="row  videos-list">
+                                <template v-for="cou in courselist">
+                                    <article class="col-md-6  video-item">
+                                        <video class="video-prev video-prev-small" controls
+                                               :poster="'../static/images/course/'+cou.img">
+                                            <source src="#" type="video/mp4">
+                                            <source src="#" type="video/ogg">
+                                            您的浏览器不能使用最新的视频播放方式呢
+                                        </video>
+                                        <p class="button-full"><a :href="'/vip/videos?course_id='+cou.course_id"
+                                                                  class="btn btn-theme btn-green">点击前往</a></p>
+                                    </article>
+                                </template>
+                            </div>
+                        </section>
+                    </article>
+                </div>
+                <aside class="col-md-4">
+
+                    <h3 class="video-title ">章节列表</h3>
+                    <!--                章节列表-->
+                    <div class="scrolls">
+                        <table id="sel_chapter" class="table table-hover" style="background-color: white">
+                            <!--                        glyphicon glyphicon-ok -->
+                            <tr v-for="c,index in chapterlist" v-if="c.cha_id==chapter.cha_id" class="success">
+                                <td v-on:click="getVideo(c.cha_id,c.p_plan)">P{{index+Number(1)}}&nbsp;&nbsp;&nbsp;
+                                    <template v-if="c.p_plan>95"><span style="color: #00b0ff"
+                                                                       class="glyphicon glyphicon-ok"/></template>
+                                    <template v-else>
+                                        <span style="color: #00b0ff">{{c.p_plan==null?0:c.p_plan}}%</span>
+                                    </template>
+                                </td>
+                                <td v-on:click="getVideo(c.cha_id,c.p_plan)">{{c.cha_name}}</td>
+                            </tr>
+                            <tr v-else>
+                                <td v-on:click="getVideo(c.cha_id,c.p_plan)">P{{index+Number(1)}}&nbsp;&nbsp;&nbsp;
+                                    <template v-if="c.p_plan>95"><span style="color: #00b0ff"
+                                                                       class="glyphicon glyphicon-ok"/></template>
+                                    <template v-else>
+
+                                        <span style="color: #00b0ff">{{c.p_plan==null?0:c.p_plan}}%</span>
+                                    </template>
+                                </td>
+                                <td v-on:click="getVideo(c.cha_id,c.p_plan)">{{c.cha_name}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!--<p class="video-description">handler has just finished his Graphic Design degree and enjoys continuing to learn from Monica and building his experience. Joey and Phoebe focus on bringing new business to the company. They have won a number of big clients recently and both also have qualifications in project management to ensure that the projects run smoothly from start to finish.</p>-->
+                    <div class="row buttons-margin-horizontal">
+                        <div class="col-md-6 button-full">
+                            <a v-if="brr[1]=='true'" v-on:click="toGood(course.course_id)"
+                               class="btn  btn-theme btn-red"><i class="fa fa-heart"></i>点赞</a>
+                            <a v-else v-on:click="toGood(course.course_id)" class="btn disabled btn-theme btn-red"><i
+                                    class="fa fa-heart"></i>已点赞</a>
+                        </div>
+                        <div class="col-md-6 button-full">
+                            <a v-if="brr[0]=='true'" v-on:click="toLike(course.course_id)"
+                               class="btn btn-theme btn-orange"><i class="fa fa-plus"></i>收藏</a>
+                            <a v-else v-on:click="toLike(course.course_id)" class="btn disabled btn-theme btn-orange"><i
+                                    class="fa fa-plus"></i>已收藏</a>
+                        </div>
+                    </div>
+                    <!--                <p class="button-full buttons-margin-horizontal"><a class="btn btn-theme btn-green"><i-->
+                    <!--                        class="fa fa-download"></i> Download the video</a></p>-->
+                    <!--                -->
+                    <div class="blue-box video-social">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-2">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+
+        <input id="course_id" type="hidden" :value="chapter.course_id">
+        <input id="vipA" type="hidden" :value="course.vip">
+    </section>
+</div>
+
+
+<!--   滚动条-->
+<style type="text/css">
+    .scrolls {
+        height: 300px;
+        overflow: scroll;
+        width: auto;
+    }
+</style>
+
+<!--页尾-->
+<footer class="main bg-dark-img">
+    <section class="widgets">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>关于我们</h4>
+                    <p>横跨Java、HTML5前端、大数据、区块链、Python、Android等多个技术方向
+                        源码级讲解的课程，有广度更有深度，助万千“谷粉”走上了软件开发之路，为众多IT企业技术升级提供了宝贵参考，好评如潮！.</p>
+                </div>
+                <div class="col-md-3 footer-qlink">
+                    <h4>合作推荐</h4>
+                    <nav>
+                        <ul>
+                            <li><a href="pay_vip.htm">www.xxx.com</a></li>
+                            <li><a href="categories.htm">www.xxx.com</a></li>
+                            <li><a href="about-us.htm">www.xxx.com</a></li>
+                            <li><a href="blog-list.htm">www.xxx.com</a></li>
+                            <li><a href="contact.html">www.xxx.com</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-md-3 footer-blog">
+                    <h4>博客文章</h4>
+                    <ul class="media-list">
+                        <li class="media">
+                            <a class="pull-left" href="blog-post.htm"><img class="media-object img-rounded"
+                                                                           src="../static/main/img/64x64.gif"
+                                                                           alt="author"/></a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="blog-post.htm">xxxx</a></h5>
+                                <p>xxxxxxxxxxxx...</p>
+                                <span class="footer"><time datetime="2014-01-09T22:11" class="cute-time">2014/01/09 22:11:19</time> by admin</span>
+                                <!-- attribute "datetime" is optional -->
+                            </div>
+                        </li>
+                        <li class="media">
+                            <a class="pull-left" href="blog-post.htm"><img class="media-object img-rounded"
+                                                                           src="../static/main/img/64x64.gif"
+                                                                           alt="author"/></a>
+                            <div class="media-body">
+                                <h5 class="media-heading"><a href="blog-post.htm">aaaaaaaaaaaa</a></h5>
+                                <p>bbbbbbbbbbbbbbbbbbbb...</p>
+                                <span class="footer"><time datetime="2013-12-29T20:12" class="cute-time">2013/12/29 20:12:38</time> by admin</span>
+                                <!-- attribute "datetime" is optional -->
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 footer-social">
+                    <h4>支持多种账号</h4>
+                    <a class="btn btn-social social-facebook"
+                       href="https://www.facebook.com/pages/KL-Webmedia/131260293670757"><i class="fa fa-facebook"></i></a>
+                    <!--<a class="btn-social social-vimeo" href="https://vimeo.com/"><i class="fa fa-vimeo"></i></a>-->
+                    <a class="btn btn-social social-youtube" href="http://www.youtube.com/"><i
+                            class="fa fa-youtube"></i></a>
+                    <a class="btn btn-social social-twitter" href="https://twitter.com/KLWebmedia"><i
+                            class="fa fa-twitter"></i></a>
+                    <a class="btn btn-social social-gplus" href="https://plus.google.com/113174627408639682462/posts"><i
+                            class="fa fa-google-plus"></i></a>
+                    <!--<a class="btn-social social-blogger" href="https://www.blogger.com/"><i class="fa fa-facebook"></i></a>-->
+                    <a class="btn btn-social social-dribbble" href="http://dribbble.com/KL-Webmedia"><i
+                            class="fa fa-dribbble"></i></a>
+                    <!--<a class="btn-social social-deviantart" href="http://kl-webmedia.deviantart.com/"><i class="fa fa-deviantart"></i></a>-->
+                    <a class="btn btn-social social-linkedin" href="https://www.linkedin.com/"><i
+                            class="fa fa-linkedin"></i></a>
+                    <a class="btn btn-social social-tumblr" href="https://www.tumblr.com/"><i class="fa fa-tumblr"></i></a>
+                    <!--<a class="btn-social social-flickr" href="http://www.flickr.com/"><i class="fa fa-flickr"></i></a>-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="copyright">
+        <div class="container"> &copy; <b>xxx.com</b> &nbsp; | &nbsp
+            探索教育黑科技，课程体系1月一小改，3月一大改
+            每期班都在更新迭代，始终追求技术的实用性与前瞻性完美结合！
+        </div>
+    </section>
+</footer>
+<!--页尾-->
+<!--做为视频播放状态的标记,1为初始化化，2为跳转后-->
+<input id="video_TEST" type="hidden" value="1">
+
+<!--引入Vue-->
+<script src="../static/vuejs/axios-0.18.0.js"></script>
+<script src="../static/vuejs/vuejs-2.5.16.js"></script>
+<script src="../static/vuejs/main/video.js"></script>
+<script src="../static/vuejs/main/herder.js"></script>
+<script type="text/javascript">
+    // <!--隐藏跳转按钮-->
+    $(document).ready(function () {
+        $("#planClick").hide();
+        go();
+    });
+
+    //获取视频DOM元素
+    function myFunction() {
+        // go();
+    }
+
+    // var video = document.getElementById("video");
+    // video.oncanplay=function () {
+    //     go();
+    //     console.log("111")
+    // }
+
+    //开始监听视频播放情况
+    function go(percent_s) {
+        var percentSSS = percent_s;
+        video.oncanplay = function () {
+            console.log("准备就绪");
+            if (video != null) {
+                //获取播放进度
+                let perscents = 10;
+                if (perscents > 0 && $("#video_TEST").val() == '1') {
+                    // $("#planClick").show()
+                    $("#video_TEST").val("2");
+                    console.log("开始跳转")
+                    video.currentTime = Math.floor(getPlan() * 0.01 * video.duration);
+                    // play();
+                } else {
+                    if (percentSSS != null && percentSSS != -1) {
+                        console.log(percentSSS)
+                        video.currentTime = Math.floor(percentSSS * 0.01 * video.duration);
+                        percentSSS = -1;
+                    }
+                }
+            }
+        };
+    }
+
+    // var video = document.getElementById("video");
+    // //跳转播放
+
+    //开始播放
+    video.addEventListener('play', function () {
+        $("#planClick").hide();
+        // var plans = Math.floor(perscents * 0.01 * video.duration)
+        console.log("开始播放，播放进度：" + video.currentTime + "s   总进度：" + video.duration);
+    });
+
+    //监听播放暂停
+    video.addEventListener('pause', function () {
+        if ((video.duration - video.currentTime) <= 3) {
+            // Ajax(100);
+        }
+        console.log("播放暂停，播放进度：" + video.currentTime + "s    总进度：" + video.duration);
+    });
+    //监听播放结束
+    video.addEventListener('ended', function (percen) {
+        // Ajax(percen);
+        // if (getVipBoolean()=='false'){
+        //     console.log("222")
+        //     $("#planClick").show();
+        //     video.currentTime = 60;
+        //
+        // }
+        console.log("播放结束");
+    });
+    //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
+    video.addEventListener("timeupdate", function () {
+        var vip = $("#vipA").val();
+        var timeDisplay;
+        var sumtime;
+        var percent;
+        //用秒数来显示当前播放进度
+        timeDisplay = Math.floor(video.currentTime);
+        // console.log(Math.floor(myVideo.currentTime))
+//            parseInt(5.0)=5
+        sumtime = Math.floor(video.duration);
+        percent = timeDisplay / sumtime * 100;
+        if (timeDisplay > 60) {
+        
+            //VIP测试
+            if (vip == '1') {
+                if (getVipBoolean() == 'false') {
+                    $("#planClick").show();
+                    video.pause();
+                    video.currentTime = 60;
+                    return false;
+                }
+            }
+        }
+        percent = parseInt(percent);
+        if (percent % 1 == 0) {
+             percent = parseInt(percent);
+            Ajax(percent);
+        }
+        console.log(percent + "%");
+    }, false);
+
+
+    //保存进度
+    function Ajax(percent) {
+        var cha_id = $("#cha_id").html();
+        var course_id = $("#course_id").val();
+        $.ajax({
+            url: "/vip/savePlan",
+            type: 'post',
+            data: {cha_id: cha_id, percent: percent, course_id: course_id},
+            success: function (data) {
+                if (data == '成功') {
+                    window.getChapterList();
+                    return false;
+                } else if (data == "login") {
+                    window.location.href = "/login";
+                }
+            },
+            error: function () {
+                console.log("进度保存出错！")
+            }
+        });
+    }
+
+    //    获取当前进度
+    function getPlan() {
+        var course_id = $("#course_id").val();
+        var cha_id = $("#cha_id").html();
+        var persons;
+        $.ajax({
+            url: "/vip/getPlan",
+            type: 'post',
+            data: {course_id: course_id, cha_id: cha_id},
+            async: false,
+            success: function (data) {
+                return persons = data;
+            },
+            error: function () {
+                alert("error")
+            }
+        });
+        return persons;
+    }
+
+    // 判断会员状态
+    function getVipBoolean() {
+        $.ajax({
+            url: "/vip/getVipBoolean",
+            type: 'post',
+            success: function (data) {
+                return vip = data;
+            },
+            error: function () {
+                alert("error")
+            }
+        });
+        return vip;
+    }
+
+</script>
+<script>
+    // //点击跳转播放
+    // function skip() {
+    //     console.log("跳转播放")
+    //    $("#planClick").hide();
+    //     var video = document.getElementById("video");
+    //     video.currentTime = Math.floor(getPlan() * 0.01 * video.duration);
+    // }
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.SubscribeMapper">
+    <insert id="InsSub" parameterType="subscribe">
+INSERT INTO
+`edu`.`subscribe`
+(
+ `u_id`,
+`my_id`
+)
+ VALUES
+(
+ #{u_id},
+ #{my_id}
+);
+</insert>
+    <select id="SelSubCount" parameterType="subscribe" resultType="Integer">
+        select count(*) FROM `subscribe`
+        <where>
+            <if test="my_id!=null">
+                and my_id=#{my_id}
+            </if>
+        </where>
+    </select>
+
+    <select id="SelSubCountByMyAndHe" parameterType="subscribe" resultType="Integer">
+        select count(*) FROM `subscribe`
+        where
+               my_id=#{my_id} and u_id=#{u_id}
+
+    </select>
+
+    <select id="SelSubAndUser" parameterType="Integer" resultType="subscribe">
+        select * FROM `subscribe`
+       LEFT JOIN `user`
+     on subscribe.u_id=`user`.u_id
+        where
+             subscribe.my_id=#{my_id}
+
+    </select>
+
+    <delete id="DelSub" parameterType="subscribe">
+        delete from `subscribe`
+        where s_id=#{s_id}
+    </delete>
+
+    <!--    <select id="SelSubAll" parameterType="Integer" resultType="subscribe">-->
+    <!--        select * from `subscribe`-->
+    <!--        left join course on `like`.course_id=course.course_id-->
+    <!--WHERE `like`.u_id=#{u_id}-->
+    <!--    </select>-->
+</mapper>
+

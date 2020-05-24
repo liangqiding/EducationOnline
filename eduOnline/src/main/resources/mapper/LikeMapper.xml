@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.LikeMapper">
+    <insert id="InsLike" parameterType="like">
+    INSERT INTO `edu`.`like`
+(
+`course_id`,
+ `u_id`
+)
+VALUES
+(
+#{course_id},
+ #{u_id}
+);
+</insert>
+    <select id="SelLikeCount" parameterType="like" resultType="Integer">
+        select count(*) FROM `like`
+        <where>
+            <if test="u_id!=null">
+                and u_id=#{u_id}
+            </if>
+            <if test="course_id!=null">
+                and course_id=#{course_id}
+            </if>
+        </where>
+    </select>
+    <delete id="DelLike" parameterType="like">
+        delete from `like`
+        where id=#{id}
+    </delete>
+    <select id="SelLikeAll" parameterType="Integer" resultType="like">
+        select * from `like`
+        left join course on `like`.course_id=course.course_id
+WHERE `like`.u_id=#{u_id}
+    </select>
+</mapper>
+

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.Vip_OrderMapper">
+<insert id="InsVip_Order" parameterType="vip">
+
+INSERT INTO `edu`.`vip_order`
+(
+ `order_id`,
+ `u_id`,
+ `date`,
+ `price`,
+ `longtime`
+)
+ VALUES
+(
+ #{order_id},
+  #{u_id},
+  #{date},
+  #{price},
+  #{longtime}
+);
+</insert>
+ <select id="SelVipOrder" resultType="vip_order" parameterType="vip_order">
+SELECT
+vip_order.id,
+vip_order.order_id,
+vip_order.u_id,
+vip_order.date,
+vip_order.longtime,
+vip_order.price,
+`user`.user_name,
+`user`.`password`,
+`user`.username,
+`user`.r_id,
+`user`.email,
+`user`.major,
+`user`.introduce,
+`user`.age,
+`user`.sex
+FROM vip_order LEFT JOIN `user` on vip_order.u_id=`user`.u_id
+ </select>
+</mapper>
+

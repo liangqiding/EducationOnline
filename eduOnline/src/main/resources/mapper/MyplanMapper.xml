@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.PlanMapper">
+
+    <!--   1.获取播放进度-->
+    <select id="SelPlanByCha_idAndU_id" parameterType="my_plan" resultType="my_plan">
+        select * from
+        my_plan
+        where
+        cha_id=#{cha_id}
+        and u_id=#{u_id}
+    </select>
+    <!--2.-->
+    <insert id="InsertMyPlan" parameterType="my_plan">
+    INSERT INTO my_plan
+(
+my_plan.cha_id,
+my_plan.p_plan,
+my_plan.course_id,
+my_plan.u_id
+)
+VALUES
+(
+#{cha_id},
+'0',
+#{course_id},
+#{u_id}
+)
+</insert>
+
+    <!--    3.更新进度-->
+    <update id="UpdateMy_planByCha_idAndU_id" parameterType="my_plan">
+        UPDATE my_plan
+        <set>
+            p_plan=#{p_plan}
+        </set>
+        WHERE cha_id=#{cha_id}
+        and u_id=#{u_id}
+    </update>
+
+    <delete id="DelMy_plan" parameterType="Integer">
+        DELETE  FROM my_plan
+WHERE  course_id=#{course_id}
+and u_id=#{u_id}
+    </delete>
+
+<!--    4-->
+    <select id="SelPlanByCour_idAndU_id" parameterType="my_plan" resultType="my_plan">
+        select * from
+        my_plan
+        where
+        course_id=#{course_id}
+        and u_id=#{u_id}
+    </select>
+</mapper>
+

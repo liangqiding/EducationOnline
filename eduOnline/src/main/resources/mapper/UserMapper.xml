@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+<mapper namespace="com.edu.eduonline.dao.UserMapper">
+
+    <insert id="InsterUser" parameterType="user">
+INSERT INTO `user`
+(
+`user`.user_name,
+`user`.`password`,
+`user`.`r_id`,
+`user`.username,
+`user`.date
+
+)VALUES
+(
+#{user_name},
+#{password},
+0,
+#{username},
+#{date}
+)
+    </insert>
+
+    <select id="SelectUserByUser" resultType="user" parameterType="user">
+        SELECT
+        *
+        FROM
+        user
+        WHERE username=#{username}
+        and password=#{password}
+    </select>
+
+    <select id="SelectUserByUsername" resultType="user" parameterType="String">
+        SELECT
+        *
+        FROM
+        user
+        WHERE username=#{username}
+    </select>
+    <select id="SelUserByID" parameterType="Integer" resultType="user">
+          SELECT
+        `user`.u_id,
+`user`.user_name,
+`user`.`password`,
+`user`.username,
+`user`.r_id,
+`user`.email,
+`user`.major,
+`user`.images,
+`user`.introduce,
+`user`.age,
+`user`.sex,
+vip.v_id,
+vip.startdate,
+vip.longtime,
+vip.grade,
+vip.`year`
+        FROM
+        user
+LEFT JOIN vip ON `user`.u_id=vip.u_id
+        WHERE `user`.u_id=#{u_id}
+    </select>
+
+    <select id="SelUserAll" parameterType="Integer" resultType="user">
+          SELECT
+        `user`.u_id,
+`user`.user_name,
+`user`.date,
+`user`.`password`,
+`user`.username,
+`user`.r_id,
+`user`.email,
+`user`.images,
+`user`.major,
+`user`.introduce,
+`user`.age,
+`user`.sex,
+vip.v_id,
+vip.startdate,
+vip.longtime,
+vip.grade,
+vip.`year`
+        FROM
+        user
+LEFT JOIN vip ON `user`.u_id=vip.u_id
+    </select>
+<!--    更新用户信息-->
+    <update id="UpdUserByU_id" parameterType="user">
+        UPDATE
+        user
+        <set>
+            <if test="user_name != null and user_name !=''">
+                user_name=#{user_name},
+            </if>
+            <if test="email != null and email!=''">
+                email=#{email},
+            </if>
+             <if test="images != null and images!=''">
+                 images=#{images},
+            </if>
+            <if test="sex != null and sex !=''">
+                sex=#{sex},
+            </if>
+            <if test="major != null and major !=''">
+                major=#{major},
+            </if>
+            <if test="introduce != null and introduce !=''">
+                introduce=#{introduce},
+            </if>
+            <if test="age != null">
+                age=#{age},
+            </if>
+        </set>
+        WHERE u_id=#{u_id}
+    </update>
+</mapper>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.RateMapper">
+    <insert id="InsRate" parameterType="rate">
+ INSERT INTO
+ `edu`.`rate`
+ (
+  `u_id`,
+  `sum`,
+   `date`,
+    `state`
+    )
+    VALUES
+    (
+     #{u_id},
+     #{sum},
+     #{date},
+     #{state}
+     );
+</insert>
+
+    <select id="SelRate" resultType="Integer" parameterType="Integer">
+  SELECT
+count(*)
+FROM
+rate
+WHERE `date`=#{date}
+ </select>
+    <select id="SelRateAll" resultType="rate">
+  SELECT
+*
+FROM
+rate
+ </select>
+
+    <update id="UdpRate" parameterType="vip">
+        UPDATE
+        `edu`.`rate`
+        <set>
+            <if test="sum!=null">
+                `sum`=`sum`+#{sum},
+            </if>
+        </set>
+        WHERE (`date`=#{date});
+    </update>
+
+</mapper>
+

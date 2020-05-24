@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Kodinger">
+	<title>注册</title>
+	<link rel="stylesheet" type="text/css" href="../static/login/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/login/css/my-login.css">
+</head>
+<body class="my-login-page">
+	<section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+					<div class="brand">
+						<img src="../static/images/My/默认头像.jpg">
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title">注册</h4>
+
+							 
+								<div class="form-group">
+									<label for="username" id="A">账号</label>
+									<input onblur="burA()" id="username" type="text" class="form-control" name="username" required autofocus>
+								</div>
+
+								<div class="form-group">
+									<label for="user_name" id="B">用户名</label>
+									<input onblur="burB()" id="user_name" type="user_name" class="form-control" name="user_name" required>
+								</div>
+
+								<div class="form-group">
+									<label for="password" id="C">密码</label>
+									<input onblur="burC()" id="password" type="password" class="form-control" name="password" required data-eye>
+								</div>
+								<div class="form-group">
+									<label for="passwords" id="rp">再次输入密码</label>
+									<input id="passwords" type="password" class="form-control"  onblur="bur()" name="passwords" required data-eye>
+								</div>
+
+								<div class="form-group">
+									<label>
+										<input id="terms" type="checkbox" name="aggree" value="1"> 我同意用户协议
+									</label>
+									<h5 id="xieyi" style="color: red"></h5>
+								</div>
+
+								<div class="form-group no-margin">
+									<button onclick="register()"  class="btn btn-primary btn-block">
+										注册
+									</button>
+								</div>
+								<div class="margin-top20 text-center">
+									已经有账号了? <a href="login.html">登录</a>
+								</div>
+
+						</div>
+					</div>
+					<div class="footer">
+					欢迎来到我们的网站 <a href="#"
+								 target="_blank" title="模板之家">在线点播学习网站</a> -
+					Welcome <a href="#" title="网页模板" target="_blank">欢迎来到我们的网站</a>
+				</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="../static/login/js/jquery.min.js"></script>
+	<script src="../static/login/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../static/login/js/my-login.js"></script>
+	<script type="text/javascript">
+		function register() {
+			var username = $("#username").val();
+			var user_name=$("#user_name").val()
+			var password = $("#password").val();
+			var passwords = $("#passwords").val();
+			console.log(user_name)
+			if (username==''){
+				$('#A').text("登录名空")
+				$('#A').attr("style","color:red");
+				return false;
+			}else if (user_name==''){
+				$('#B').text("用户名空")
+				$('#B').attr("style","color:red");
+				return false;
+			}else if (password==''){
+				$('#C').text("密码为空")
+				$('#C').attr("style","color:red");
+				return false;
+			}
+			if (password!=passwords){
+				alert("两次密码输入不一致")
+				$('#rp').text("密码不一致")
+				$('#rp').attr("style","color:red");
+				return false;
+			}
+
+			//terms 用户协议
+			if ($("#terms").is(":checked")) {
+			} else {
+				// alert("请勾选用户协议！")
+				$("#xieyi").html("请勾选买家协议");
+				return false;
+			}
+			$.ajax({
+				url: "/doregister",
+				type: 'post',
+				data: {
+					username: username,
+					password: password,
+					user_name: user_name
+				},
+				success: function (data) {
+					if (data == '注册成功') {
+						window.location.href = "/login";
+					}else {
+						alert(data)
+					}
+					return ture;
+				},
+				error: function () {
+					alert("error")
+					return ture;
+				}
+			});
+		}
+		//用户协议框 //控制协议没勾选提示
+		$("#terms").click(function () {
+			if ($("#terms").is(":checked")) {
+				$("#xieyi").html("");
+			}
+		})
+		//密码输入检测
+		function  bur() {
+			var password = $("#password").val();
+			var passwords = $("#passwords").val();
+			if (password == passwords) {
+				//	密码一致
+				$('#rp').text("再次输入密码")
+				$('#rp').attr("style","color: write");
+			} else {
+				$('#rp').text("密码不一致")
+				$('#rp').attr("style","color:red");
+			}
+		}
+		function  burA() {
+			var username = $("#username").val();
+			if (username !=null) {
+
+				$.ajax({
+				url: "/login/checkUsername",
+				type: 'post',
+				data: {
+					username: username
+				},
+				success: function (data) {
+					if (data == '1') {
+						$('#A').text("账号已存在")
+				$('#A').attr("style", "color: red");
+						
+					}else {
+						$('#A').text("账号")
+				$('#A').attr("style", "color: write");
+					}
+					return ture;
+				},
+				error: function () {
+					alert("error")
+					return ture;
+				}
+			});
+			
+			}
+		}
+		function  burB() {
+			var user_name=$("#user_name").val()
+			if (user_name !=null) {
+				$('#B').text("用户名")
+				$('#B').attr("style", "color: write");
+			}
+		}
+		function  burC() {
+			var password = $("#password").val();
+			if (password !=null) {
+				$('#C').text("密码")
+				$('#C').attr("style", "color: write");
+			}
+		}
+
+	</script>
+</body>
+</html>

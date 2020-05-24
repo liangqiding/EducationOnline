@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.CourseMapper">
+    <!--1.查询课程>>>list-->
+    <select id="SelCourse" resultType="Course" parameterType="Course">
+        select
+        course.course_id,
+        course.vip,
+        course.course_name,
+        course.state,
+        course.img,
+        course.class_id,
+        course.`view`,
+        course.`like`,
+        course.`good`,
+        course.grade,
+        course.price,
+        course.course_date,
+        course.class_hour,
+        course.u_id,
+        course.author,
+        course.introduction,
+        course.uuid,
+        `user`.user_name,
+        `user`.`password`,
+        `user`.username,
+        `user`.r_id,
+        `user`.email,
+        `user`.images,
+        `user`.major,
+        `user`.introduce,
+        dict.dict_id,
+        dict.course_class
+
+        from course left join dict on course.class_id=dict.dict_id
+        LEFT JOIN `user`
+        ON course.u_id=`user`.u_id
+        <where>
+            <if test="course_name !=null and course_name !=''">
+                and course_name like "%"#{course_name}"%"
+            </if>
+            <if test="class_id !=null">
+                and class_id like #{class_id}
+            </if>
+            <if test="u_id !=null">
+                and course.u_id =#{u_id}
+            </if>
+            <if test="state !=null and state!=''">
+                and state =#{state}
+            </if>
+        </where>
+    </select>
+
+    <select id="SelCourseToSub" resultType="Course" parameterType="Integer">
+        select
+        course.course_id,
+        course.vip,
+        course.course_name,
+        course.state,
+        course.img,
+        course.class_id,
+        course.`view`,
+        course.`like`,
+        course.`good`,
+        course.grade,
+        course.price,
+        course.course_date,
+        course.class_hour,
+        course.u_id,
+        course.author,
+        course.introduction,
+        course.uuid,
+        `user`.user_name,
+        `user`.`password`,
+        `user`.username,
+        `user`.r_id,
+        `user`.email,
+        `user`.images,
+        `user`.major,
+        `user`.introduce,
+        dict.dict_id,
+        dict.course_class
+        from course left join dict on course.class_id=dict.dict_id
+        LEFT JOIN `user`
+        ON course.u_id=`user`.u_id
+        WHERE course.u_id in (
+SELECT u_id FROM subscribe WHERE subscribe.my_id=#{my_id})
+    </select>
+
+    <!--2.添加课程-->
+    <insert id="InsertCourse" parameterType="course">
+        INSERT into course
+(
+course.course_name,
+course.class_id,
+course.img,
+course.grade,
+Course_date,
+class_hour,
+author,
+u_id,
+introduction,
+state,
+uuid,
+vip,
+`view`,
+`like`,
+`good`,
+price
+)
+VALUES
+(
+#{course_name},
+#{class_id},
+#{img},
+#{grade},
+#{course_date},
+#{class_hour},
+#{author},
+#{u_id},
+#{introduction},
+'待审核',
+#{uuid},
+'0',
+0,
+0,
+0,
+0
+)
+    </insert>
+    <!--3.删除课程-->
+    <delete id="DeleteCourseByCourse_id" parameterType="course">
+        delete  from course
+        where course_id=#{course_id}
+    </delete>
+    <!--4.通过id查询课程-->
+    <select id="SelCourseById" resultType="course" parameterType="Integer">
+        SELECT
+
+course.course_id,
+        course.course_name,
+        course.vip,
+        course.state,
+        course.img,
+        course.class_id,
+        course.`view`,
+        course.`like`,
+        course.grade,
+        course.price,
+        course.course_date,
+        course.class_hour,
+        course.u_id,
+        course.good,
+        course.author,
+        course.introduction,
+        course.uuid,
+        `user`.user_name,
+        `user`.`password`,
+        `user`.username,
+        `user`.r_id,
+        `user`.email,
+        `user`.images,
+        `user`.major,
+        `user`.introduce,
+        dict.dict_id,
+        dict.course_class
+
+FROM
+course left join dict
+ on course.class_id=dict.dict_id
+ LEFT JOIN `user`
+ON course.u_id=`user`.u_id
+where course_id=#{course_id}
+    </select>
+
+    <!--    5.更新课程-->
+    <update id="UdpCourse" parameterType="course">
+        UPDATE `edu`.`course`
+        <set>
+            <if test="course_name!=null and course_name!=''">
+                `course_name`=#{course_name},
+            </if>
+
+            <if test="img!=null and img!=''">
+                `img`=#{img},
+            </if>
+            <if test="vip!=null and vip!=''">
+                `vip`=#{vip},
+            </if>
+            <if test="class_id!=null">
+                `class_id`=#{class_id},
+            </if>
+            <if test="view!=null">
+                `view`=`view`+#{view},
+            </if>
+            <if test="like!=null">
+                `like`=`like`+#{like},
+            </if>
+            <if test="grade!=null and grade!=''">
+                `grade`=#{grade},
+            </if>
+            <if test="price!=null">
+                `price`=#{price},
+            </if>
+            <if test="good!=null ">
+                `good`=`good`+#{good},
+            </if>
+            <if test="course_date!=null and course_date!=''">
+                `course_date`=#{course_date},
+            </if>
+            <if test="class_hour!=null and class_hour!=''">
+                `class_hour`=#{class_hour},
+            </if>
+            <if test="course_date!=null and course_date!=''">
+                `course_date`=#{course_date},
+            </if>
+            <if test="u_id!=null and u_id!=''">
+                `u_id`=#{u_id},
+            </if>
+            <if test="author!=null and author!=''">
+                `author`=#{author},
+            </if>
+            <if test="state!=null and state!=''">
+                `state`=#{state},
+            </if>
+        </set>
+        WHERE (`course_id`=#{course_id});
+    </update>
+
+    <select id="SelCourseByUUID" parameterType="String" resultType="course">
+        select * from course
+        where uuid=#{uuid}
+    </select>
+</mapper>
+

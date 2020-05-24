@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--指定属性-->
+
+<mapper namespace="com.edu.eduonline.dao.MyCourseMapper">
+    <!--1.生成课程表-->
+    <insert id="InsertMyCourse" parameterType="MyCourse">
+ INSERT INTO `edu`.`MyCourse` 
+(
+ `u_id`, 
+`cha_id`,
+ `m_plan`,
+ `m_price`,
+ `m_date`,
+ `last_date`,
+ `p_id`,
+ `course_id`)
+VALUES
+(
+#{u_id},
+#{cha_id},
+#{m_plan},
+#{m_price},
+#{m_date},
+#{last_date},
+#{p_id},
+#{course_id}
+)
+    </insert>
+    <!--    2.-->
+    <select id="SelMyCourseByU_idAndCou_id" parameterType="myCourse" resultType="myCourse">
+        SELECT * FROM mycourse
+        <where>
+            <if test="u_id!=null">
+                and u_id=#{u_id}
+            </if>
+             <if test="course_id!=null">
+                and course_id=#{course_id}
+            </if>
+        </where>
+    </select>
+<!--3.判断是否已存在课表-->
+    <select id="SelMyCourseCount" parameterType="myCourse" resultType="Integer">
+        SELECT count(*) FROM mycourse
+        <where>
+            <if test="u_id!=null">
+                and u_id=#{u_id}
+            </if>
+            <if test="course_id!=null">
+                and course_id=#{course_id}
+            </if>
+        </where>
+    </select>
+<!--   4. 更新-->
+    <update id="UpdateMyCourseByCourse_idAndUid" parameterType="MyCourse">
+        UPDATE MyCourse
+        <set>
+            <if test="footmark!=null">
+                footmark=#{footmark},
+            </if>
+            <if test="cha_id!=null">
+                cha_id=#{cha_id},
+            </if>
+             <if test="last_date!=null and last_date!=''">
+                 last_date=#{last_date},
+            </if>
+        </set>
+        where course_id=#{course_id}
+        and u_id=#{u_id}
+    </update>
+
+<!--    &lt;!&ndash;    一对多查询&ndash;&gt;-->
+<!--    <select id="SelectOneCourseToMoreMyCourse" resultMap="SelectMyCourse" parameterType="Integer">-->
+<!--SELECT * FROM MyCourse left JOIN chapter-->
+<!--on MyCourse.c_chapter_id=chapter.course_cha_id-->
+<!--WHERE u_id=#{u_id};-->
+<!--    </select>-->
+<!--    <resultMap id="SelectMyCourse" type="MyCourse">-->
+<!--        &lt;!&ndash;            通过此ID为主键查询&ndash;&gt;-->
+<!--        <id property="m_id" column="m_id"/>-->
+<!--        <result property="u_id" column="u_id"/>-->
+<!--        <result property="c_chapter_id" column="c_chapter_id"/>-->
+<!--        <result property="m_name" column="m_name"/>-->
+<!--        <result property="m_plan" column="m_plan"/>-->
+<!--        <result property="m_price" column="m_price"/>-->
+<!--        <result property="m_date" column="m_date"/>-->
+<!--        <result property="m_img" column="m_img"/>-->
+<!--        <result property="m_author" column="m_author"/>-->
+<!--        <collection property="chapterList" javaType="List" ofType="chapter">-->
+<!--            &lt;!&ndash;            通过此ID关联&ndash;&gt;-->
+<!--            <id property="cha_id" column="cha_id"/>-->
+<!--            <result property="course_cha_id" column="course_cha_id"/>-->
+<!--            <result property="video" column="video"/>-->
+<!--            <result property="cha_sum" column="cha_sum"/>-->
+<!--            <result property="cha_date" column="cha_date"/>-->
+<!--            <result property="data" column="data"/>-->
+<!--            <result property="cha_name" column="cha_name"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+
+
+
+</mapper>
+
